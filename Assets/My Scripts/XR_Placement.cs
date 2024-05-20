@@ -8,6 +8,8 @@ public class XR_Placement : MonoBehaviour
 {
     [SerializeField] private GameObject prefab;
     [SerializeField] private List<GameObject> spawnedPrefabs;
+    [SerializeField] private GameObject controlUI;
+    private bool spawnPlayer = false;
     private ARRaycastManager raycastManager;
     void Start()
     {
@@ -33,15 +35,20 @@ public class XR_Placement : MonoBehaviour
 
     private void ARRaycasting(Vector2 pos)
     {
+        if (spawnPlayer)
+            return;
         List<ARRaycastHit> hits = new List<ARRaycastHit>();
         if (this.raycastManager.Raycast(pos, hits, TrackableType.PlaneEstimated)) 
         {
             Pose pose = hits[0].pose;
-            ARSpawn(pose.position, pose.rotation);
+            if(hits[0].pose.rotation == Quaternion.Euler(0f, -90f, 0f))
+                ARSpawn(pose.position, pose.rotation);
         }
     }
     private void ARSpawn(Vector3 pos, Quaternion rot)
     {
         this.spawnedPrefabs.Add(Instantiate(prefab, pos, rot));
+        controlUI.SetActive(true);
+        spawnPlayer = true;
     }
 }
