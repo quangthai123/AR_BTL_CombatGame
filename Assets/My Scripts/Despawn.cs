@@ -26,6 +26,7 @@ public class Despawn : MonoBehaviour
                 DespawnGO();
                 ZombieSpawner.instance.currentZombieQuantity--;
                 GameManager.instance.killed++;
+                GameManager.instance.IncreaseHealthByKilledZombies();
             }
         }
     }

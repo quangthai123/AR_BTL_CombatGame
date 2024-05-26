@@ -13,7 +13,7 @@ public abstract class Spawner : MonoBehaviour
         LoadPrefabs();
         LoadHolder();
     }
-    protected void Start()
+    protected virtual void Start()
     {
         LoadPrefabs();
         LoadHolder();

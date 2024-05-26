@@ -9,6 +9,8 @@ public class Player : MonoBehaviour
     public float hp;
     public float damage;
     private Animator anim;
+    private float currentAngleVelocity = 0;
+    [SerializeField] private float smoothRotation;
     void Awake()
     {
         if (instance != null)
@@ -43,7 +45,8 @@ public class Player : MonoBehaviour
                 }
             }
         }
-        float angle = Mathf.Atan2(nearestEnemy.x - transform.position.x, nearestEnemy.z - transform.position.z) * Mathf.Rad2Deg;
+        float targetAngle = Mathf.Atan2(nearestEnemy.x - transform.position.x, nearestEnemy.z - transform.position.z) * Mathf.Rad2Deg;
+        float angle = Mathf.SmoothDampAngle(transform.rotation.eulerAngles.y, targetAngle, ref currentAngleVelocity, smoothRotation);
         transform.rotation = Quaternion.Euler(0f, angle, 0f);
     }
 
@@ -51,8 +54,24 @@ public class Player : MonoBehaviour
     {
         if (isDeath) return;
         anim.SetTrigger("IsHit");
+        AudioManager.instance.PlayeSFX(1);
         hp -= _damage;
         if (hp <= 0)
             isDeath = true;
+    }
+    private void Healing()
+    {
+        hp += 50;
+        if(hp > 100)
+            hp = 100;
+    }
+    private void OnTriggerEnter(Collider collision)
+    {
+        if (collision.gameObject.tag == "Heal")
+        {
+            Healing();
+            Destroy(collision.gameObject);
+        }
+
     }
 }

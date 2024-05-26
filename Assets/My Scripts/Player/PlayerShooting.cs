@@ -23,7 +23,7 @@ public class PlayerShooting : MonoBehaviour
             Quaternion rot = Quaternion.Euler(90f, transform.localEulerAngles.y, 0f);
             BulletSpawner.instance.Spawn(spawnBulletPos.position, rot);
             shootingTimer = shootingDelay;
-            
+            AudioManager.instance.PlayeSFX(0);
         }
     }
 

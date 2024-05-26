@@ -17,20 +17,36 @@ public class ZombieSpawner : Spawner
         else
             instance = this;
     }
-    private void Start()
+    protected override void Start()
     {
-        InvokeRepeating("SpawnZombie", 2f, 2f);
+        base.Start();
+        if (GameManager.instance.choseDiff == 0)
+        {
+            InvokeRepeating("SpawnZombie", 5f, 5f);
+            maxZombieQuantity = 10;
+        }
+        else if(GameManager.instance.choseDiff == 1)
+        {
+            InvokeRepeating("SpawnZombie", 4f, 4f);
+            maxZombieQuantity = 20;
+        }
+        else
+        {
+            InvokeRepeating("SpawnZombie", 3f, 3f);
+            maxZombieQuantity = 40;
+        }
+
     }
     //public override void Spawn(Vector3 pos, Quaternion rot)
     //{
     //    base.Spawn(pos, rot);
     //    this.objToSpawn.GetComponent<ZombieBehaviour>().ResetStatesWhenSpawn();
     //}
-    private void SpawnZombie()
+    public void SpawnZombie()
     {
-        Debug.Log("Spawn New Zombie");
         if (Player.instance == null || currentZombieQuantity >= maxZombieQuantity)
             return;
+        Debug.Log("Spawn New Zombie");
         Vector3 rdPos = new Vector3(Player.instance.transform.position.x +Random.Range(xRange.x, xRange.y), Player.instance.transform.position.y, Player.instance.transform.position.z + Random.Range(zRange.x, zRange.y));
         this.Spawn(rdPos, Quaternion.identity);
         currentZombieQuantity++;

@@ -58,6 +58,7 @@ public class ZombieBehaviour : MonoBehaviour
             anim.SetBool("Attack", false);
             canAttack = false;
             rb.velocity = Vector3.zero;
+            AudioManager.instance.PlayeSFX(2);
         } else
         {
             float angle = Mathf.Atan2(playerPos.x - transform.position.x, playerPos.z -transform.position.z) * Mathf.Rad2Deg;

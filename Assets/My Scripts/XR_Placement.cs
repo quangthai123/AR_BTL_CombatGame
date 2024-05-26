@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
@@ -41,14 +42,13 @@ public class XR_Placement : MonoBehaviour
         if (this.raycastManager.Raycast(pos, hits, TrackableType.PlaneEstimated)) 
         {
             Pose pose = hits[0].pose;
-            if(hits[0].pose.rotation == Quaternion.Euler(0f, -90f, 0f))
-                ARSpawn(pose.position, pose.rotation);
+            ARSpawn(pose.position, pose.rotation);
         }
     }
     private void ARSpawn(Vector3 pos, Quaternion rot)
     {
-        this.spawnedPrefabs.Add(Instantiate(prefab, pos, rot));
-        controlUI.SetActive(true);
+        //this.spawnedPrefabs.Add(Instantiate(prefab, pos, rot));
+        Instantiate(prefab, pos, Quaternion.identity);
         spawnPlayer = true;
     }
 }
