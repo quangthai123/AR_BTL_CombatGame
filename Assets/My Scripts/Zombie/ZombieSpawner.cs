@@ -22,17 +22,17 @@ public class ZombieSpawner : Spawner
         base.Start();
         if (GameManager.instance.choseDiff == 0)
         {
-            InvokeRepeating("SpawnZombie", 5f, 5f);
+            InvokeRepeating("SpawnZombie", 4f, 4f);
             maxZombieQuantity = 10;
         }
         else if(GameManager.instance.choseDiff == 1)
         {
-            InvokeRepeating("SpawnZombie", 4f, 4f);
+            InvokeRepeating("SpawnZombie", 3f, 3f);
             maxZombieQuantity = 20;
         }
         else
         {
-            InvokeRepeating("SpawnZombie", 3f, 3f);
+            InvokeRepeating("SpawnZombie", 2f, 2f);
             maxZombieQuantity = 40;
         }
 

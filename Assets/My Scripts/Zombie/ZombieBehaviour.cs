@@ -19,6 +19,7 @@ public class ZombieBehaviour : MonoBehaviour
     public float maxHp;
     public float hp;
     public bool canDespawn = false;
+    private bool isPlayDeadSFX = false;
     void OnEnable()
     {
         rb = GetComponent<Rigidbody>();
@@ -29,7 +30,7 @@ public class ZombieBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!isDeath)
+        if (!isDeath)
         {
             anim.SetBool("Walk", !canAttack);
             anim.SetBool("Attack", canAttack);
@@ -38,7 +39,39 @@ public class ZombieBehaviour : MonoBehaviour
             return;
         Vector3 playerPos = Player.instance.transform.position;
         transform.position = new Vector3(transform.position.x, playerPos.y, transform.position.z);
-        if(Vector3.Distance(playerPos, transform.position) < canAttackDistance && !isDeath)
+        CheckCanAttackPlayer(playerPos);
+        ChasePlayer(playerPos);
+        if (isDeath)
+        {
+            anim.SetBool("Dead", true);
+            anim.SetBool("Walk", false);
+            anim.SetBool("Attack", false);
+            canAttack = false;
+            rb.velocity = Vector3.zero;
+            if (!isPlayDeadSFX)
+            {
+                AudioManager.instance.PlayeSFX(2);
+                isPlayDeadSFX = true;
+            }
+        }
+        else
+        {
+            float angle = Mathf.Atan2(playerPos.x - transform.position.x, playerPos.z - transform.position.z) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(0f, angle, 0f);
+        }
+    }
+
+    private void ChasePlayer(Vector3 playerPos)
+    {
+        if (!canAttack && !isDeath)
+        {
+            rb.velocity = (playerPos - transform.position).normalized * moveSpeed;
+        }
+    }
+
+    private void CheckCanAttackPlayer(Vector3 playerPos)
+    {
+        if (Vector3.Distance(playerPos, transform.position) < canAttackDistance && !isDeath)
         {
             canAttack = true;
             rb.velocity = Vector3.zero;
@@ -47,24 +80,8 @@ public class ZombieBehaviour : MonoBehaviour
         {
             canAttack = false;
         }
-        if (!canAttack && !isDeath)
-        {
-            rb.velocity = (playerPos - transform.position).normalized * moveSpeed;
-        }
-        if(isDeath)
-        {
-            anim.SetBool("Dead", true);
-            anim.SetBool("Walk", false);
-            anim.SetBool("Attack", false);
-            canAttack = false;
-            rb.velocity = Vector3.zero;
-            AudioManager.instance.PlayeSFX(2);
-        } else
-        {
-            float angle = Mathf.Atan2(playerPos.x - transform.position.x, playerPos.z -transform.position.z) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.Euler(0f, angle, 0f);
-        }
     }
+
     public void DoDamagePlayer()
     {
         Player.instance.GetDamage(damage);

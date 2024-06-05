@@ -46,4 +46,8 @@ public class MainMenu : MonoBehaviour
         PlayerPrefs.SetInt("choseDiff", 2);
         SceneManager.LoadScene(1);
     }
+    public void BackToMenu()
+    {
+        chonDoKhoUI.SetActive(false);
+    }
 }
